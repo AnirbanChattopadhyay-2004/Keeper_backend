@@ -7,16 +7,32 @@ const zod=require("zod")
 const bcrypt=require("bcrypt")
 const saltround=10;
 const multer=require("multer")
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, '../frontend/public/')
-    },
-    filename: function (req, file, cb) {
-      const uniqueSuffix = Date.now() 
-      cb(null, uniqueSuffix+file.originalname)
-    }
-  })
+const cloudinary = require('cloudinary').v2
+const { CloudinaryStorage } = require("multer-storage-cloudinary")
+cloudinary.config({ 
+    cloud_name: process.env.CLOUD_NAME, 
+    api_key: process.env.CLOUD_API_KEY, 
+    api_secret: process.env.CLOUD_API_SECRET
+  });
+
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, '../Keeper_frontend/public/')
+//     },
+//     filename: function (req, file, cb) {
+//       const uniqueSuffix = Date.now() 
+//       cb(null, uniqueSuffix+file.originalname)
+//     }
+//   })
   
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+      folder: 'images', // Optional: specify a folder in Cloudinary
+      allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+    },
+  });
+
   const upload = multer({ storage: storage ,limits:{
                             fileSize:1024*1024*2 },
                             fileFilter:(req,file,cb)=>{
@@ -42,8 +58,8 @@ const constr=process.env.MONGSTR
 
 app.use(express.json())
 
-app.use(express.static("../frontend/components/css"))
-app.use(express.static("../frontend/public"))
+// app.use(express.static("../Keeper_frontend/components/css"))
+// app.use(express.static("../Keeper_frontend/public"))
 
 const schemaObj=new mongoose.Schema({id:Number,title:String,note:String,image:String})
 
@@ -51,8 +67,10 @@ const schema=new mongoose.Schema({id:Number,username:String,password:String,note
 const Usernote=mongoose.model("Usernote",schema)
 const port=3000;
 const jwtpwd=process.env.JWTPWD
-mongoose.connect(constr)
 
+mongoose.connect(constr)
+    .then(() => console.log('Database connected successfully'))
+    .catch(err => console.log('Database connection error:', err));
 function check(req,res,next)  //middleware to check the validity of given inputs.
 {
     const eschema= zod.string().email()
@@ -70,7 +88,6 @@ app.post("/api/auth/signup",check,async (req,res)=>{
     const username = req.body.username;
     const password = req.body.password;
     const f=await Usernote.findOne({username:username})
-  
     if(f)
     {
         res.status(403).json({msg:"User already present "})
@@ -157,13 +174,13 @@ app.get("/api/bin",async (req,res)=>{
 
 app.post("/api/notes",upload.single("image"),async (req,res)=>{
     const token=req.headers.token;
-
-    const note={...req.body,image:(req.file)?req.file.filename:""}
+    const image = (req.file)?req.file.filename:""
+    const note={...req.body,image:(req.file)?req.file.path:""}
 
     //contains the text part of data and req.file contains the file part
     try{
         const decoded=jwt.verify(token,jwtpwd)
-      
+
         let a=await Usernote.findOne({username:decoded.username})
         a.notes.push(note)
         await Usernote.updateOne({username:decoded.username},{notes:a.notes})
