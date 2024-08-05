@@ -14,3 +14,8 @@ npm install
 ### ```Add CLOUD_NAME, CLOUD_API_KEY,CLOUD_API_SECRET in the .env file from the cloudinary account.```
 # Running the File Locally on System
 ## ```node index.js ```
+# OR (Using DockerFile)
+### ``` docker build -t image_name . ```
+### ``` docker run -p 3000:3000 image_name ```
+# OR Using image from docker-hub
+## ```docker pull surjo123/keeper_backend:v1```
