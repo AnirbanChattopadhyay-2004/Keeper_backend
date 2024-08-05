@@ -19,3 +19,4 @@ npm install
 ### ``` docker run -p 3000:3000 image_name ```
 # OR Using image from docker-hub
 ## ```docker pull surjo123/keeper_backend:v1```
+## ```docker run -p 3000:3000 surjo123/keeper_backend:v1```
