@@ -12,5 +12,23 @@
     "multer": "^1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
     "zod": "^3.22.4"
-  }
+  },
+  "name": "backend",
+  "description": "Note Keeper applications aim to provide users with a digital solution for organizing, managing, and accessing their notes effectively, whether for personal or professional use.This is the backend file of Keeper_frontend.\r    Joinly cloning both frontend and backend makes keeper an end to end full stack project.\r # Installation\r   ## Cloning the repository\r   To clone the Keeper repository and use it in your React project, follow these steps:\r ### ``` Clone the Repository:```\r git clone https://github.com/AnirbanChattopadhyay-2004/Keeper_backend.git\r ### ``` Navigate to Keeper_backend folder: ```\r cd Keeper_backend\r ### ``` Install all the dependencies: ```\r npm install\r ### ``` Add a .env file and add your mongoDB url and json web token password in it```\r # Running the File Locally on System\r ## ```node index.js ```",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnirbanChattopadhyay-2004/Keeper_backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AnirbanChattopadhyay-2004/Keeper_backend/issues"
+  },
+  "homepage": "https://github.com/AnirbanChattopadhyay-2004/Keeper_backend#readme"
 }
